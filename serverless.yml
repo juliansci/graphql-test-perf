@@ -1,0 +1,43 @@
+service: graphql-test-perf
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  lambdaHashingVersion: '20201221'
+  region: us-east-1
+  timeout: 30
+useDotenv: true
+plugins:
+  - serverless-plugin-typescript
+  - serverless-s3-local
+  - serverless-offline
+
+custom:
+  stage: ${opt:stage, 'dev'}
+  serverless-offline:
+    noPrependStageInUrl: true
+    httpPort: 4000
+
+functions:
+  graphql:
+    handler: src/handler.serverHandler
+    events:
+      - http:
+          path: /
+          method: post
+          cors: true
+      - http:
+          path: /
+          method: get
+          cors: true
+    environment:
+      STAGE: ${self:custom.stage}
+  getItem:
+    handler: src/handler.saveItem
+    events:
+      - http:
+          path: /item
+          method: post
+          cors: true
+    environment:
+      STAGE: ${self:custom.stage}

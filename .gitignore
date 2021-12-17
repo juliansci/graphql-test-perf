@@ -1,0 +1,6 @@
+.build
+.serverless
+node_modules/
+yarn-error.log
+.env.dev.json
+src/type-defs-model
